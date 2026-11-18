@@ -267,6 +267,12 @@ Right: the banner of the profile, its name and icon, and six sections:
 
 ![Mouse lock](docs/images/general-mouse-dark.png)
 
+![Start and look](docs/images/general-look-dark.png)
+
+The Black cover section in the light theme:
+
+![Black cover section, light](docs/images/profile-cover-light.png)
+
 ---
 
 ## Your privacy, in plain words

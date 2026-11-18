@@ -3,6 +3,39 @@
 Versions are major.minor.patch.
 Patch: a fix. Minor: a new feature. Major: a big change.
 
+## 1.4.0
+
+- New: a play time log. Each time a program of a profile runs and closes, one line goes to `%APPDATA%\Soundaro\playtime.csv`
+  (date, start, end, seconds, profile, program). It opens in Excel or Notepad.
+- New: a profile can have several programs (separate them with commas). The list button adds the chosen program to the list.
+  The profile starts when one of its programs starts, and it counts as closed when all of them closed.
+- New: in Settings, a section "Play time log" shows the time of all programs of the profile, added up: today, the last 7 days and in total,
+  by program, and the last sessions. A button opens the log file.
+
+## 1.3.0
+
+- New: sounds that sound like a real product. Three themes: Glass bell (default), Marimba and Soft pluck. Or Off.
+  Seven sounds: profile switch, time is up, snooze, mute on, mute off, mouse lock, mouse free.
+  They are made for Soundaro and sit inside the exe.
+- New: in Settings, General, Messages and sound: a theme choice and a button for every sound. A new theme plays at once.
+- New: sounds for the mute and mouse lock hotkeys (the auto lock stays silent). One switch turns them off.
+
+## 1.2.1
+
+- The play time limit can be 5 to 480 minutes (before: 15 to 240). Each profile remembers its own limit.
+
+## 1.2.0
+
+- New: a play time limit for each profile (5 to 480 minutes). It starts with the profile.
+  The cover shows the time that is left. When the time is up, a message shows, a soft sound plays, and the covered screens pulse slowly
+  (black to a dim amber, one breath in 4 seconds, never bright). A plain black cover pulses too.
+- New: the tray menu has "Snooze 10 minutes" and "Stop the play time reminder" while a timer runs.
+- New: the log has the play time (start, time up, each snooze, end) and the game time of each program (how long it ran).
+
+## 1.1.1
+
+- Fix: with the graphs switched off, the cover is plain black. Before, it still drew the profile name, the clock and empty graph frames.
+
 ## 1.1.0
 
 - New: a profile can cover chosen screens with black, to remove the glare. The main screen is never covered.

@@ -53,7 +53,7 @@ A profile knows these things:
 | **Microphone** and **Microphone (communication)** | The same, for the microphone. |
 | **Set playback volume to** / **Set microphone volume to** | A volume that is set when the profile starts. The volume from before comes back when you switch to a profile that sets none. |
 | **Mute the speakers** / **Mute the microphone** | Makes a *mute profile*. One hotkey makes everything quiet. The next profile brings the sound back. |
-| **Soft sound when I switch** | A short *bloop* on the new device, so you know it worked. |
+| **Soft sound when I switch** | A short, soft sound on the new device, so you know it worked (see *Sounds* below). |
 
 **Four ways to switch:**
 
@@ -62,6 +62,8 @@ A profile knows these things:
 - **The tray menu** lists all profiles. The active one has a tick.
 - **By itself.** A profile can start *when its program starts* (a game), and *when its device connects* (your Bluetooth headset).
   When the game closes, Soundaro goes back to the profile you had before. You can switch this off per profile.
+- **Several programs.** A profile can have more than one program, for example a game and its launcher. Separate them with commas.
+  The profile starts when one of them starts, and it counts as closed when all of them have closed.
 
 Soundaro counts a game as closed when its **window** is gone, not when its process ends.
 A game can need 15 seconds more to shut down. You do not wait for that.
@@ -113,6 +115,23 @@ A profile can **cover chosen screens with black**. No more glare from a second s
 
 ![The Black cover section](docs/images/profile-cover-dark.png)
 
+#### ⏱️ Play time limit and clock
+
+The cover shows the **time** (HH:mm) under the game name, when the graphs are on.
+
+Give a profile a **play time limit** (5 to 480 minutes, in steps of 5), in the section *In the game and play time*:
+
+- The timer starts with the profile. For a profile with a game, that is when the game starts. A profile without a program name works too.
+- With the graphs on, the cover shows the **time left**.
+- When the time is up, you get a message and a soft sound, and the covered screens **pulse slowly**: from black to a dim amber and back,
+  one breath in 4 seconds. It never flashes and it never gets bright. A plain black cover pulses too.
+- The tray menu shows the time left and has **Snooze 10 minutes** and **Stop the play time reminder**.
+  The pulse also stops when the game closes or when you switch to another profile.
+- The log has the whole story: when the timer started, when time was up, **each snooze**, and how long you played.
+  It also logs the **game time** of every program that a profile starts on: *"Game time: arma3_x64.exe played 1:23:45"*.
+
+![The cover with the time that is left](docs/images/cover-timeleft.png)
+
 #### 📈 FPS
 
 Tick **Show the FPS** and the cover shows a big FPS number, the **median**, and the **1 % low** (the speed of your slowest 1 % of frames).
@@ -138,6 +157,39 @@ its banner and its icon in `%APPDATA%\Soundaro\art`. If the program is not from 
 - The profile list shows the **real icon** of the program.
 
 Nothing goes to the network. Soundaro reads your Steam files on your own disk.
+
+### 📒 Play time log
+
+Soundaro keeps a log of your play time. Each time a program of a profile runs and closes, one line goes to
+`%APPDATA%\Soundaro\playtime.csv`: the date, the start, the end, the seconds, the profile and the program.
+It opens in Excel or Notepad. A run of less than 10 seconds is not counted.
+
+In Settings, the section **Play time log** adds up **all the programs of the profile**:
+
+- the time **today**, in the **last 7 days**, and **in total**,
+- the time of **each program**, with the number of sessions,
+- the **last sessions**, with the start and end,
+- a button that opens the log file.
+
+![The play time log of a profile](docs/images/profile-playlog-dark.png)
+
+### 🔔 Sounds
+
+Soundaro has its own sounds, made for it. They are not recordings of other people, so there is no licence question,
+and they sit inside the exe. Choose a **theme** in *General › Messages and sound*:
+
+- **Glass bell** (the default): clear and soft, with a gentle tail.
+- **Marimba**: warm and round, like wooden bars.
+- **Soft pluck**: a light, plucked string.
+- **Off**.
+
+Seven sounds, all calm: **profile switch** (two soft rising notes), **time is up** (a calm rising triad, not an alarm), **snooze** (one low note),
+**mute on** and **mute off** (a short step down, and a short step up), **mouse lock** and **mouse free** (a soft tick, and a lighter one).
+
+**You can hear all of them in Settings.** There is a play button for every sound, and a new theme plays at once, with the volume you set.
+One switch turns off the sounds for the mute and mouse lock hotkeys. (A mouse lock by the auto lock is always silent.)
+
+![Messages and sound](docs/images/general-messages-dark.png)
 
 ### ✨ Little things we liked
 
@@ -173,6 +225,7 @@ Right-click the tray icon:
 - Your **profiles**. The active one has a tick.
 - **Mute speakers** and **Mute microphone**.
 - **Free the mouse** (only while the mouse is locked).
+- **Play time left**, **Snooze 10 minutes** and **Stop the play time reminder** (only while a play time limit runs).
 - **Remove the black cover** (only while a cover is on).
 - **Restart as administrator (for the FPS)** (only if a profile wants the FPS and Soundaro is not an administrator).
 - **Settings...**, the version, and **Exit**.
@@ -190,13 +243,14 @@ Everything is in two pages with sections. One section is open at a time, so you 
 | ![Profiles, dark](docs/images/profiles-dark.png) | ![Profiles, light](docs/images/profiles-light.png) |
 
 Left: your profiles, with **Add**, **Remove**, **Move up** and **Move down**. The order is the order of the hotkey.
-Right: the banner of the profile, its name and icon, and five sections:
+Right: the banner of the profile, its name and icon, and six sections:
 
 1. **Sound devices and volume.** Playback, microphone, and the volumes.
-2. **When it starts.** The program name, with the list button. Go back to the earlier profile when the program closes. Switch when a device connects. The soft sound.
-3. **In the game.** Mute when away, push to talk, mouse speed.
+2. **When it starts.** The programs (one or more), with the list button. Go back to the earlier profile when the program closes. Switch when a device connects. The soft sound.
+3. **In the game and play time.** Mute when away, push to talk, mouse speed, and the play time limit.
 4. **Mute profile.** Mute the speakers and the microphone.
-5. **Black cover for screens.** The screens, the graphs, the FPS and the size.
+5. **Play time log.** The time of all programs of the profile, added up.
+6. **Black cover for screens.** The screens, the graphs, the FPS and the size.
 
 ![When it starts](docs/images/profile-start-dark.png)
 
@@ -209,7 +263,7 @@ Right: the banner of the profile, its name and icon, and five sections:
 1. **Hotkeys for profile and sound.** Switch profile, mute the microphone, mute the speakers, push to talk.
 2. **Mouse lock.** The lock hotkey, the auto lock hotkey, the auto lock, locking normal windows, and the programs to never lock.
 3. **Start and look.** Start with Windows, as administrator, light theme, and **Open log file**.
-4. **Messages and sound.** The message at the top, how long it stays, and the volume of the soft sound.
+4. **Messages and sound.** The message at the top, how long it stays, the volume, the sound theme, a play button for every sound, and the switch for the hotkey sounds.
 
 ![Mouse lock](docs/images/general-mouse-dark.png)
 
@@ -219,7 +273,8 @@ Right: the banner of the profile, its name and icon, and five sections:
 
 - Soundaro **never connects to the internet**. No update check. No telemetry. Nothing.
 - Your settings are one small file: `%APPDATA%\Soundaro\config.json`. Delete it, and Soundaro starts fresh.
-- The log is `%APPDATA%\Soundaro\log.txt`. It stays on your PC.
+- The log is `%APPDATA%\Soundaro\log.txt`. It stays on your PC. It has the profile switches, the snoozes and the game time.
+- The play time log is `%APPDATA%\Soundaro\playtime.csv`. It stays on your PC too.
 - The banners and icons are in `%APPDATA%\Soundaro\art`. Delete the folder, and Soundaro makes them again.
 - Push to talk reads **one key**. Soundaro installs **no keyboard hook** and **no mouse hook**.
 - The FPS only listens to frame events from Windows. It puts **no code in any game**.
@@ -231,6 +286,7 @@ Right: the banner of the profile, its name and icon, and five sections:
 - If a hotkey is already used by another program, Soundaro tells you at start. Pick another one.
 - Push to talk mutes your real Windows microphone. If Soundaro crashes in the middle of a game, press your mute hotkey to bring it back.
 - The FPS works for DirectX 9 to 12. It needs administrator rights.
+- The play time pulse is slow and dim on purpose. It is a reminder, not an alarm.
 - The black cover is a black window on top. An LCD screen still has its backlight on, so a faint glow stays. An OLED screen turns fully dark.
   Because nothing moves, a screen that stays covered for many hours can show burn-in on OLED. Switch to a profile without a cover when you are done.
 - If you move the exe and you use **As administrator**, switch it off and on again, so the task points to the new place.

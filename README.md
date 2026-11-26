@@ -108,6 +108,11 @@ A profile can **cover chosen screens with black**. No more glare from a second s
   GPU load is the busiest engine, like Task Manager shows it, and it works for every GPU brand.
 - It shows **the game**: its name, and its picture. A Steam game shows its Steam picture. Any other program shows its icon.
   The icon is never enlarged, so it stays sharp. The program in front is used when the profile has no program name.
+- **The game's own numbers.** Next to the total of the PC, the cover shows what the game itself uses: on the CPU row how many cores it keeps busy
+  (*game 4.1 of 16 cores*), on the GPU row its video memory and the use of the whole card (*game video memory 5.2 GB (card 6.3 GB)*), and on the Memory row
+  its memory (*game 4.5 GB*). They come from the game process and the Windows counters, once a second. A number that Windows does not give is left out.
+- **Ping.** With the FPS on and the current server found, the cover shows the **ping** to the server next to the FPS. It is measured every 3 seconds.
+  Green is up to 100 ms, amber up to 200 ms, red above that.
 - **Nothing moves.** The layout stays in place. Only the graphs and the numbers change. The clock shows the time.
 - **Size:** small, medium or large. The size follows the screen, so a 4K screen and a portrait screen both look right, and it always fits.
 - **Look of the numbers:** *Calm* (the default), *Mono*, *Warm*, *Night red* (dark red only: the least glare and it keeps your eyes used to the dark),
@@ -177,9 +182,9 @@ GMC knows your **Steam library** (any drive, any folder). It only **reads** the 
   You can mix Steam games and normal programs in one profile.
 - **Steam info on the cover** (a switch in the cover section, on by default; it needs no network):
   - the **name of the server** that you played on last, from the server browser of Steam,
-  - your **Steam play time** of the game and **when you last played** it,
+  - your **Steam play time** of the game and **when you last played** it. When GMC saw the game close, this is the time you left it (*today 15:56*). Before that, it is the day from Steam,
   - your **achievements**, for example *22 / 123*,
-  - **Update waiting** with the size, or *Up to date*.
+  - **Update waiting** with the size that is left, or *Up to date*. An update waits only when Steam says *update required*, or when its download is not finished.
 - The Steam **banner** and the game name come from the library cache of Steam.
 
 ![The cover with Steam info and online info](docs/images/cover-steam.png)
@@ -192,7 +197,8 @@ It is **off by default**. When it is on, GMC does two things, and nothing else:
 1. **Players online now.** One public call to Valve (`GetNumberOfCurrentPlayers`) every two minutes. It sends only the game number.
    It needs no key and no login.
 2. **Your servers.** GMC asks each server on the cover for its **name, map, players (31/64) and ping**, every 10 seconds.
-   It uses the standard Source query protocol (A2S).
+   It uses the standard Source query protocol (A2S). For the **current server** it asks for the player list every **2 seconds** (the score effects below need it)
+   and measures the ping every 3 seconds.
 
 **Which servers are on the cover** (*Servers on the cover*):
 
@@ -243,6 +249,31 @@ The **player list on the cover** has 5, 10 or 20 lines, sorted by score or by ti
   The only ways to read it are to read the game's memory or to put code in the game. That can get you banned by anti-cheat, and GMC does neither.
   You see the ping to the server, and the time that each player has been connected.
 
+#### 🎯 Score effects: kills, team kills and joins
+
+With the player list of the current server, the cover can show who scores. One switch in *Server details*, **Pulse on kills**, turns all of this on or off for the profile. It is on by default.
+
+| What happens | What you see |
+|---|---|
+| **Your score goes up** (your kill) | every cover pulses **soft red**, one breath in 2 seconds, at most 30 % red. Your name and score on the list turn red and fade back in 4 seconds |
+| **A teammate's score goes up** | the cover pulses **faint green** (at most 15 %). A teammate has the same clan tag as you, or is in your friends list |
+| **A friend or a teammate joins** | the cover pulses **faint blue** (at most 15 %). Someone who was not in the list for the last minute counts as a join, so a short list error does not pulse |
+| **Any player's score goes up** | the name and the score on the list are **bold and brighter** for 1 to 2 seconds |
+
+- Red comes first, then green, then blue. The effect comes within about 3 seconds of the event, because the list is asked every 2 seconds.
+- **Who you are:** GMC looks for your name in the player list. It uses the name in the profile (*Server details › My name in the game*). With empty,
+  it uses (Arma 3 only) the Arma 3 profile that was saved last, which is your name in the game, and then your Steam name. A clan tag in front or behind is ignored
+  (`[ABC] Anna`, `Anna [ABC]`, `ABC | Anna`).
+- A server that hides its player list gives no effects. A death is not shown, because the server query has no deaths.
+
+#### 🧩 Arma 3 only
+
+These parts show only for Arma 3, and only while it runs:
+
+- **My mods (loaded now)** in the *Server details* window: the mods from the `-mod=` part of the start line in the newest game log (`.rpt`),
+  and the warnings of the log about a mod that needs a missing mod. GMC only reads the log.
+- The Arma 3 profile is used as your name (see above), the tags in plain words, the DLC and the mod keys of the server, the crash notice and the graphics settings in `fps.csv`.
+
 #### ⭐ Where my friends play
 
 Type the names of your friends in *Server details* (they also get a star in the player list), and switch on **Show where my friends play**.
@@ -273,6 +304,21 @@ Press **Players log...** in the cover section. The window has the switch for the
 
 **Friends are not shown.** Steam keeps no friend list on your PC, and the Steam Web API needs your own key and a public profile.
 It is not worth it, and it would put names of people on your screen.
+
+### 🛰️ Game notes, alerts and lag
+
+- **Crash notice (Arma 3).** When the game closes, GMC reads its log. Arma 3 ends the log with *Memory should be free now.* only when it closes in the normal way.
+  Without that line, a message shows the last error line and the number of crashes today. It is written to `crashes.csv`. When GMC itself closes Arma 3 to join a server, there is no notice.
+- **FPS of each game.** When a game closes, a message shows the average FPS, the 1 % low and the middle FPS. `fps.csv` also keeps the graphics settings of Arma 3
+  and the number of CPU threads, so you can compare runs. This needs the FPS switch and administrator rights.
+- **Server history.** The servers that you played on, with the time on each (`servers.csv`). The profile needs the online info.
+- **Server alerts** (tray menu). Pick a server from your Steam favourites and history. GMC tells you when a slot is free, when there are at least N players,
+  or when the mission changes or the server restarts. It asks the server every 45 seconds. An alert that fired is removed.
+- **Lag alerts** (tray menu switch). A game server sends data all the time. When the game still sends packets but nothing comes from the server for 4 seconds,
+  GMC shows *Lag* with a sound. After 12 seconds it shows *Connection lost?*. Each stall of 4 seconds or more goes into `lag.csv`.
+  GMC uses only the **times** of the packets, never their content. It needs administrator rights and a profile with the online info. The first 25 seconds after you join a server do not count.
+- **Game log** window (tray menu): the servers by time, the last visits, the FPS of the last games, and the crashes.
+- **A game that already runs** when GMC starts gets its profile and its cover at once. **Go back to:** each profile can name the profile that comes back when its program closes.
 
 ### 🖼️ Banners and icons for your games
 
@@ -408,6 +454,8 @@ Everything is in two pages with sections. One section is open at a time, so you 
   - *In the game and play time › Log the play time* (per profile) writes the play time log `%APPDATA%\GameModeCompanion\playtime.csv`
     and the lines about that profile's timer, snoozes and game time.
   - *Players log* (per profile, needs the online info) writes `players.csv`: who joined and left a server. It holds the names that the server shows.
+  - The game notes write small files by themselves when the feature runs: `crashes.csv`, `fps.csv`, `servers.csv`, `lag.csv` and `lastexit.txt` (the time you left each Steam game).
+    They hold times, server names and numbers, and nothing else.
   - All files stay on your PC.
 - The banners and icons are in `%APPDATA%\GameModeCompanion\art`. Delete the folder, and GMC makes them again.
 - Push to talk reads **one key**. GMC installs **no keyboard hook** and **no mouse hook**.

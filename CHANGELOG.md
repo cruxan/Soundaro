@@ -3,6 +3,66 @@
 Versions are major.minor.patch. The version is in `Soundaro.csproj`.
 Patch: a fix. Minor: a new feature. Major: a big change.
 
+## 2.7.0
+
+Score effects on the cover (they need the online info and the current server):
+- **Kill pulse.** When your own score in the server player list goes up, every cover pulses soft red (one breath in 2 seconds, at most 30 % red). Your name and score on the player list turn red and fade back in 4 seconds.
+- **Team kill pulse.** When a teammate's score goes up, the cover pulses faint green (at most 15 %). A teammate has the same clan tag as you, or is in your friends list.
+- **Join pulse.** When a friend or a teammate joins the server, the cover pulses faint blue (at most 15 %). A player counts as a join only if he or she was not in the list for the last minute, so a short list error does not pulse.
+- **Bold scores.** When the score of any player goes up, the name and the score are bold and brighter for 1 to 2 seconds.
+- Red comes first, then green, then blue. One switch in Server details, **Pulse on kills**, turns all of this on or off for the profile. It is on by default.
+- The player list of the current server is asked every 2 seconds (`ScoresEveryMs` in `ServerWatch.cs`), so an effect comes within about 3 seconds of the event.
+- **Who you are.** GMC looks for your name in the player list: the name in the profile, else (Arma 3 only) the Arma 3 profile that was saved last, else the Steam name. A clan tag in front or behind is ignored ("[ABC] Anna", "Anna [ABC]", "ABC | Anna").
+
+The game itself on the cover:
+- Next to the totals of the PC, the cover shows the numbers of the game process: on the CPU row how many cores the game keeps busy ("game 4.1 of 16 cores"), on the GPU row the video memory of the game and of the whole card, and on the Memory row the memory of the game. They update once a second. A number that Windows does not give is left out.
+
+Arma 3 only (nothing shows for other games):
+- The Server details window has **My mods (loaded now)**: the mods from the `-mod=` part of the start line in the newest game log (RPT), and the log warnings about a mod that needs a missing mod. It shows only while Arma 3 runs, and it only reads the log.
+
+Steam lines:
+- Fix: **"Update waiting" was wrong.** Steam keeps the size of the last download in the game manifest after the update is done, so GMC showed a waiting update for an up to date game. An update now waits only when Steam says "update required", or when the download is not finished. The size is what is left.
+- **Last played** shows when you left the game, with the time (for example "today 15:56"), not only the day. GMC writes the time when the game closes (`lastexit.txt`). Before the first close, it shows the day from Steam.
+
+Fix:
+- **A game that already runs when GMC starts** now starts its profile and its cover. Before, GMC waited for the next start of the game. This matters after a restart of GMC in the middle of a game.
+
+## 2.6.0
+
+- New: **the ping to the connected server on the cover**, at the right edge next to the FPS. It is measured every 3 seconds with a short server query (a round trip), so it is live. It is green up to 100 ms, amber to 200 ms, and red above that. It shows when the FPS is on and the cover finds the current server (the profile needs the online info).
+
+## 2.5.0
+
+- New: **lag alerts.** A game server sends data all the time. When the game still sends packets but nothing comes from the server for 4 seconds, GMC shows "Lag" with a sound. After 12 seconds it shows "Connection lost?". Each stall of 4 seconds or more goes into `lag.csv` (date, time, seconds, server), and the message at the end of a game says how many stalls there were and the longest one. The Game log window has a LAG part.
+- It uses only the times of the packets (the network watch), never their content. It needs administrator rights and a profile with the online info that finds the current server. The first 25 seconds after you join a server do not count (loading). When the game stops sending too (a pause, a loading screen), the gap ends and is not a stall.
+- The tray menu has a switch "Lag alerts". The numbers (2.5, 4, 12 and 25 seconds) are in `LagLog` in `GameNotes.cs`.
+
+## 2.4.1
+
+- The cover fits long lists and long names without a mouse. With info lines (servers, details, player list, players log) the column is wider (860 instead of 620 at scale 1), and the size still shrinks so that all of it fits the screen. A line that is still too wide gets a smaller font, down to 70 %, and only then "...". Nothing changes place, because the width depends on the profile choices, not on the text.
+- The Game log and Server alerts windows can be resized, scroll long lines, and cut long names with "...".
+
+## 2.4.0
+
+- New: **crash notice (Arma 3).** When the game closes, GMC reads its log (`.rpt`). Arma 3 ends the log with "Memory should be free now." only when it closes in the normal way. Without that line, GMC shows a message with the last error line and the number of crashes today, and writes `crashes.csv`. GMC waits until the game process has ended, so the log is complete. When GMC itself ends Arma 3 to join a server, there is no notice.
+- New: **FPS of each game.** When a game closes, a message shows the average FPS, the 1 % low and the middle FPS. `fps.csv` also keeps the graphics settings of Arma 3 (view distance, objects, terrain grid, shadows, MSAA, PPAA) and the number of CPU threads, so you can compare runs (for example SMT on and off). This needs the FPS switch of the cover and administrator rights.
+- New: **server history.** The servers that you played on, with the time on each (`servers.csv`). It uses the current server that the cover finds, so the profile needs the online info.
+- New: **server alerts** (tray menu). Pick a server from your Steam favourites and history, and GMC tells you when a slot is free, when there are at least N players, or when the mission changes or the server restarts. It asks the server every 45 seconds. An alert that fired is removed.
+- New: **Game log** window (tray menu): the servers by time, the last visits, the FPS of the last games, and the crashes.
+
+## 2.3.1
+
+- Fix: the cover kept the info of the old server after you joined a new one. Once a sure server was found (from the network or from your name), GMC never looked again, and the old server kept answering. Now GMC looks again every 20 seconds (the network of the last 12 seconds) and switches when you are on another server. A guess never replaces a sure server.
+
+## 2.3.0
+
+- New: **"When that program closes, go back to".** In "When it starts", each profile can name the profile that comes back when its program closes (for example Speakers). The default stays "the profile from before". The choice is grey when "Go back to the earlier profile" is off. If the chosen profile is deleted, GMC uses the profile from before.
+- The cover fix of 2.2.1 stays: without any profile to go back to, the cover of a closed program goes away.
+
+## 2.2.1
+
+- Fix: the cover stayed on the screen after the game closed. This happened when GMC started while the game already ran (or started at the same time), because GMC had no profile to go back to. Now the cover of a closed program always goes away.
+
 ## 2.2.0
 
 - **The program is called GMC.** The long name, Game Mode Companion, stays in the readme and in the file description. The program file is `GMC.exe`. The settings folder and the autostart entry keep their names, so nothing moves.

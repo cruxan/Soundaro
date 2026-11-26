@@ -260,6 +260,15 @@ With the player list of the current server, the cover can show who scores. One s
 | **A friend or a teammate joins** | the cover pulses **faint blue** (at most 15 %). Someone who was not in the list for the last minute counts as a join, so a short list error does not pulse |
 | **Any player's score goes up** | the name and the score on the list are **bold and brighter** for 1 to 2 seconds |
 
+**How to switch it on:**
+
+1. Open **Settings › Profiles** and pick the profile of your game. The profile needs the program of the game in *When it starts*.
+2. In *Black cover for screens*: tick the screen to cover, tick **Show CPU, GPU and memory graphs** (the cover shows nothing else without it), and tick **Show online info**.
+   Leave *Servers on the cover* on **Current server (detected)**.
+3. Press **Server details...**. Set **Players on the cover** to 5, 10 or 20 lines (the red and bold names need the list; the pulses do not).
+   Check that **Pulse on kills** is on. Type your name in the game if the server shows another name than your Steam name.
+4. To find your server by the network, start GMC as administrator (tray menu *Restart as administrator*). Without it, GMC finds the server by your name in the player lists.
+
 - Red comes first, then green, then blue. The effect comes within about 3 seconds of the event, because the list is asked every 2 seconds.
 - **Who you are:** GMC looks for your name in the player list. It uses the name in the profile (*Server details › My name in the game*). With empty,
   it uses (Arma 3 only) the Arma 3 profile that was saved last, which is your name in the game, and then your Steam name. A clan tag in front or behind is ignored

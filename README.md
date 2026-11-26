@@ -260,6 +260,12 @@ With the player list of the current server, the cover can show who scores. One s
 | **A friend or a teammate joins** | the cover pulses **faint blue** (at most 15 %). Someone who was not in the list for the last minute counts as a join, so a short list error does not pulse |
 | **Any player's score goes up** | the name and the score on the list are **bold and brighter** for 1 to 2 seconds |
 
+| Your kill (red) | A teammate's kill (green) | A friend joins (blue) |
+|---|---|---|
+| ![Red pulse on your kill](docs/images/cover-kill.png) | ![Green pulse for a teammate](docs/images/cover-team.png) | ![Blue pulse when a friend joins](docs/images/cover-join.png) |
+
+The pictures use made-up names and numbers. They also show the game's own numbers (*game 4.1 of 12 cores*, video memory, memory) and the ping.
+
 **How to switch it on:**
 
 1. Open **Settings › Profiles** and pick the profile of your game. The profile needs the program of the game in *When it starts*.
